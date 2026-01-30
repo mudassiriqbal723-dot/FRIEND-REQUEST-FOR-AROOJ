@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Arooj</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #4a4a4a;
+            overflow: hidden;
+        }
+
+        /* Card Container */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: #d6336c;
+            line-height: 1.5;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Primary Button Style (Green/Pink) */
+        .btn-primary {
+            background-color: #ff4757;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff6b81;
+            transform: translateY(-2px);
+        }
+
+        /* Secondary Button Style (Gray/White) */
+        .btn-secondary {
+            background-color: #f1f2f6;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #dfe4ea;
+            transform: translateY(-2px);
+        }
+
+        /* Hidden Utility */
+        .hidden {
+            display: none;
+        }
+
+        /* Animation for appearance */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Decorative Heart */
+        .heart {
+            font-size: 50px;
+            margin-bottom: 10px;
+            color: #ff4757;
+            animation: beat 1s infinite alternate;
+        }
+
+        @keyframes beat {
+            to { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Screen 1: Greeting -->
+    <div id="screen-greeting" class="card fade-in">
+        <div class="heart">🌸</div>
+        <h1>Assalam o Alaikum Arooj</h1>
+        <div class="btn-container">
+            <button class="btn-primary" onclick="showProposal()">Walikum Salam</button>
+        </div>
+    </div>
+
+    <!-- Screen 2: Proposal -->
+    <div id="screen-proposal" class="card hidden">
+        <div class="heart">❤️</div>
+        <h1 id="proposal-text">Can you become my friend?</h1>
+        <div class="btn-container" id="proposal-buttons">
+            <button class="btn-primary" onclick="handleYes()">Yes</button>
+            <button class="btn-secondary" id="btn-no" onclick="handleNo()">No</button>
+        </div>
+    </div>
+
+    <!-- Screen 3: Success -->
+    <div id="screen-success" class="card hidden">
+        <div class="heart">🎉</div>
+        <h1>Congratulations Arooj!</h1>
+        <p>You and me (Mudassir) are now friends 🤝</p>
+    </div>
+
+    <script>
+        // State variables
+        let noCount = 0;
+        const maxNoCount = 5;
+
+        // Function to move from Greeting to Proposal
+        function showProposal() {
+            document.getElementById('screen-greeting').classList.add('hidden');
+            const proposalScreen = document.getElementById('screen-proposal');
+            proposalScreen.classList.remove('hidden');
+            proposalScreen.classList.add('fade-in');
+        }
+
+        // Function for "Yes" click
+        function handleYes() {
+            document.getElementById('screen-proposal').classList.add('hidden');
+            const successScreen = document.getElementById('screen-success');
+            successScreen.classList.remove('hidden');
+            successScreen.classList.add('fade-in');
+            createConfetti();
+        }
+
+        // Function for "No" click
+        function handleNo() {
+            noCount++;
+            const textElement = document.getElementById('proposal-text');
+            const noBtn = document.getElementById('btn-no');
+
+            // Add a little shake effect
+            const card = document.getElementById('screen-proposal');
+            card.style.transform = "translateX(10px)";
+            setTimeout(() => card.style.transform = "translateX(0)", 100);
+            setTimeout(() => card.style.transform = "translateX(-10px)", 200);
+            setTimeout(() => card.style.transform = "translateX(0)", 300);
+
+            if (noCount < maxNoCount) {
+                // Changing messages
+                const messages = [
+                    "Arooj please think about it ❤️<br>Can you become my friend?",
+                    "Are you sure? Please think again 🥺<br>Can we be friends?",
+                    "Don't break my heart 💔<br>Will you be my friend?",
+                    "I promise to be a good friend! 🤝<br>Please say Yes?",
+                    "Pretty please with a cherry on top? 🍒"
+                ];
+                
+                // Select message based on count (safe check index)
+                let msgIndex = (noCount - 1) % messages.length;
+                textElement.innerHTML = messages[msgIndex];
+                
+            } else {
+                // Final State: Replace text and change "No" button to "Yes"
+                textElement.innerHTML = "Okay, you have no choice now! ❤️<br>Can you become my friend?";
+                
+                // Transform the No button into a Yes button
+                noBtn.innerText = "Yes";
+                noBtn.className = "btn-primary"; // Change style to look like the Yes button
+                noBtn.onclick = handleYes; // Change functionality
+            }
+        }
+
+        // Optional: Simple Confetti effect for the celebration
+        function createConfetti() {
+            const colors = ['#ff4757', '#2ed573', '#1e90ff', '#ffa502'];
+            for(let i=0; i<50; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.top = '-10px';
+                conf.style.width = '10px';
+                conf.style.height = '10px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.transition = 'top 3s ease-in, opacity 3s ease-out';
+                conf.style.zIndex = '999';
+                document.body.appendChild(conf);
+
+                setTimeout(() => {
+                    conf.style.top = '100vh';
+                    conf.style.opacity = '0';
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>
